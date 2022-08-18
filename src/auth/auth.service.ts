@@ -80,6 +80,18 @@ export class AuthService {
     };
   }
 
+  async checkAuthStatus(user: User) {
+    delete user.password;
+    return {
+      ...user,
+      token: this.getJwtToken({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      }),
+    };
+  }
+
   private handleDBErrors(error: any): never {
     if (error.code === '23505') {
       throw new BadRequestException(error.detail);

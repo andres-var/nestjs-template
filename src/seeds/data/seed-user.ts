@@ -17,8 +17,8 @@ export const initialUsers: ISeedUser[] = [
     lastName: 'One',
     alias: 'Test One',
     isActive: true,
-    password: bcrypt.hashSync('Abc123', 10),
-    roles: ['admin'],
+    password: bcrypt.hashSync('asd123', 10),
+    roles: ['super-admin'],
   },
   {
     email: 'test2@google.com',
@@ -26,7 +26,16 @@ export const initialUsers: ISeedUser[] = [
     lastName: 'Two',
     alias: 'Test Two',
     isActive: true,
-    password: bcrypt.hashSync('Abc123', 10),
+    password: bcrypt.hashSync('asd123', 10),
     roles: ['admin'],
+  },
+  {
+    email: 'test3@google.com',
+    name: 'Test',
+    lastName: 'three',
+    alias: 'Test three',
+    isActive: true,
+    password: bcrypt.hashSync('asd123', 10),
+    roles: ['user'],
   },
 ];

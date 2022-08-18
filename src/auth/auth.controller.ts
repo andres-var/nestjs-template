@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { RawHeaders } from 'src/common/decorators/raw-headers.decorator';
+import { Auth, GetUser } from './decorators';
+import { Roles } from './interfaces';
+import { User } from 'src/users/entities/user.entity';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -21,12 +24,9 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('private')
-  testPrivate() {
-    return {
-      ok: 200,
-      message: 'ready',
-    };
+  @Auth()
+  @Get('check-auth-status')
+  checkAuthStatus(@GetUser() user: User) {
+    return this.authService.checkAuthStatus(user);
   }
 }

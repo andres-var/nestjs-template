@@ -36,6 +36,13 @@ export class User {
   password: string;
 
   @ApiProperty()
+  @Column('text', {
+    array: true,
+    default: ['user', 'consult'],
+  })
+  roles: string[];
+
+  @ApiProperty()
   @Column('boolean')
   isActive: boolean;
 }
