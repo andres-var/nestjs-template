@@ -1,15 +1,14 @@
 import {
-  createParamDecorator,
-  ExecutionContext,
-  InternalServerErrorException,
-} from '@nestjs/common';
+	createParamDecorator,
+	ExecutionContext,
+} from "@nestjs/common";
 
 export const RawHeaders = createParamDecorator(
-  (data, ctx: ExecutionContext) => {
-    const req = ctx.switchToHttp().getRequest();
+	(data, ctx: ExecutionContext) => {
+		const req = ctx.switchToHttp().getRequest();
 
-    const rawHeaders = req.rawHeaders;
+		const rawHeaders = req.rawHeaders;
 
-    return data ? rawHeaders[data] : rawHeaders;
-  },
+		return data ? rawHeaders[data] : rawHeaders;
+	},
 );

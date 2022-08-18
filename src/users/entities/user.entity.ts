@@ -1,48 +1,48 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty }                            from "@nestjs/swagger";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
   @ApiProperty({
-    example: '2f29aa6b-2de0-4267-84af-b16309be597d',
-    title: 'ID User',
-    uniqueItems: true,
+  	example: "2f29aa6b-2de0-4267-84af-b16309be597d",
+  	title: "ID User",
+  	uniqueItems: true,
   })
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn("uuid")
+  	id: string;
 
   @ApiProperty()
-  @Column('text')
-  name: string;
+  @Column("text")
+  	name: string;
 
   @ApiProperty()
-  @Column('text')
-  lastName: string;
+  @Column("text")
+  	lastName: string;
 
   @ApiProperty()
-  @Column('text', {
-    unique: true,
+  @Column("text", {
+  	unique: true,
   })
-  alias: string;
+  	alias: string;
 
   @ApiProperty()
-  @Column('text', {
-    unique: true,
+  @Column("text", {
+  	unique: true,
   })
-  email: string;
+  	email: string;
 
   @ApiProperty()
-  @Column('text')
-  password: string;
+  @Column("text")
+  	password: string;
 
   @ApiProperty()
-  @Column('text', {
-    array: true,
-    default: ['user', 'consult'],
+  @Column("text", {
+  	array: true,
+  	default: ["user", "consult"],
   })
-  roles: string[];
+  	roles: string[];
 
   @ApiProperty()
-  @Column('boolean')
-  isActive: boolean;
+  @Column("boolean")
+  	isActive: boolean;
 }

@@ -1,41 +1,41 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable }       from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository }       from "typeorm";
 
-import { User } from 'src/users/entities/user.entity';
-import { initialData } from './data/seed-data';
+import { User }        from "src/users/entities/user.entity";
+import { initialData } from "./data/seed-data";
 
 @Injectable()
 export class SeedsService {
-  constructor(
+	constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+	) {}
 
-  async runSeeds() {
-    await this.deleteTables();
+	async runSeeds() {
+		await this.deleteTables();
 
-    await this.insertUsers();
+		await this.insertUsers();
 
-    return 'SEED EXECUTED';
-  }
+		return "SEED EXECUTED";
+	}
 
-  private async deleteTables() {
-    const queryBuilder = this.userRepository.createQueryBuilder();
-    await queryBuilder.delete().where({}).execute();
-  }
+	private async deleteTables() {
+		const queryBuilder = this.userRepository.createQueryBuilder();
+		await queryBuilder.delete().where({}).execute();
+	}
 
-  private async insertUsers() {
-    const seedUsers = initialData.users;
+	private async insertUsers() {
+		const seedUsers = initialData.users;
 
-    const users: User[] = [];
+		const users: User[] = [];
 
-    seedUsers.forEach((user) => {
-      users.push(this.userRepository.create(user));
-    });
+		seedUsers.forEach((user) => {
+			users.push(this.userRepository.create(user));
+		});
 
-    const dbUsers = await this.userRepository.save(seedUsers);
+		const dbUsers = await this.userRepository.save(seedUsers);
 
-    return dbUsers;
-  }
+		return dbUsers;
+	}
 }

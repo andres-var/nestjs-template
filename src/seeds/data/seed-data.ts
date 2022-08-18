@@ -1,9 +1,9 @@
-import { initialUsers, ISeedUser } from './seed-user';
+import { initialUsers, ISeedUser } from "./seed-user";
 
 export interface ISeedData {
-  users: ISeedUser[];
+    users: ISeedUser[];
 }
 
 export const initialData: ISeedData = {
-  users: initialUsers,
+	users: initialUsers,
 };
