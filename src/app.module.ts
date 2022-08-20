@@ -7,6 +7,7 @@ import { CommonModule } from './common/common.module';
 import { SeedsModule } from './seeds/seeds.module';
 import { AuthModule } from './auth/auth.module';
 import { AwsS3Service } from './aws-s3/aws-s3.service';
+import { AwsS3Module } from './aws-s3/aws-s3.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AwsS3Service } from './aws-s3/aws-s3.service';
     SeedsModule,
     AuthModule,
     FilesModule,
+    AwsS3Module,
   ],
   controllers: [],
   providers: [AwsS3Service],

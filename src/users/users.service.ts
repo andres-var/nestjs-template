@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { AwsS3Service } from 'src/aws-s3/aws-s3.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private readonly awsS3Service: AwsS3Service) {}
+
+  async create(createUserDto: CreateUserDto, file: Express.Multer.File) {
+    const s3 = await this.awsS3Service.uploadFile(file);
+    return {
+      s3: s3.Location,
+      //   createUserDto,
+    };
   }
 
   findAll() {

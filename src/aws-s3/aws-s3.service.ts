@@ -1,33 +1,40 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AwsS3Service {
   constructor(private readonly configService: ConfigService) {}
 
+  private readonly logger = new Logger();
+  private readonly AWS_S3_BUCKET = this.configService.get('AWS_S3_BUCKET');
   private readonly aws = AWS;
   private readonly awsS3 = new AWS.S3({
     accessKeyId: this.configService.get('AWS_S3_ACCESS_KEY'),
     secretAccessKey: this.configService.get('AWS_S3_KEY_SECRET'),
   });
 
-  async uploadFile(file) {
-    const { originalname } = file;
-
-    // const params = {
-    // 	Bucket: this.AWS_S3_BUCKET,
-    // 	Key: String(originalname),
-    // 	Body: file.buffer,
-    // 	ContentType: file.mimetype,
-    // };
+  async uploadFile(file: Express.Multer.File) {
+    const params = {
+      Bucket: this.AWS_S3_BUCKET,
+      Key: String(uuid()),
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    };
 
     try {
-      // const s3Response = await this.awsS3.upload(params).promise();
-      // console.log(s3Response);
-      // return s3Response;
+      return await this.awsS3.upload(params).promise();
     } catch (e) {
-      throw new InternalServerErrorException();
+      this.logger.error('Error connecting to S3', e);
+
+      if (e.code === 'InvalidBucketName') {
+        throw new InternalServerErrorException('CHECK THE LOGS');
+      }
     }
   }
 

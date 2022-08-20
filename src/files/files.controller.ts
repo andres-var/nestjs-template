@@ -6,13 +6,11 @@ import {
   Post,
   Res,
   UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
-import { diskStorage } from 'multer';
 
+import { FileInterceptorDisk } from 'src/common/decorators/file-interceptor-disk.decorator';
 import { FilesService } from './files.service';
 import { fileFilter } from './helpers/fileFilter.helper';
 import { fileNamer } from './helpers/fileNamer.helper';
@@ -36,15 +34,7 @@ export class FilesController {
   }
 
   @Post('user/avatar')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      fileFilter: fileFilter,
-      storage: diskStorage({
-        destination: './static/users',
-        filename: fileNamer,
-      }),
-    }),
-  )
+  @FileInterceptorDisk('file', 'users')
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('Make sure that the file an image');

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UploadedFile,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -15,17 +16,22 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Auth } from 'src/auth/decorators';
 import { Roles } from 'src/auth/interfaces';
+import { FileInterceptorS3 } from 'src/common/decorators/file-interceptor-s3.decorator';
 
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Auth(Roles.ADMIN, Roles.SUPER_ADMIN)
+  //   @Auth(Roles.ADMIN, Roles.SUPER_ADMIN)
   @Post()
+  @FileInterceptorS3('file')
   @ApiResponse({ status: 200, description: 'User Created', type: User })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createUserDto: CreateUserDto,
+  ) {
+    return this.usersService.create(createUserDto, file);
   }
 
   @Auth(Roles.ADMIN, Roles.SUPER_ADMIN)
