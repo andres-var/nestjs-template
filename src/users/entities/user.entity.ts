@@ -43,6 +43,6 @@ export class User {
   roles: string[];
 
   @ApiProperty()
-  @Column('boolean')
+  @Column('boolean', { default: true })
   isActive: boolean;
 }
