@@ -1,40 +1,43 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-
-import { awsS3 } from "config/aws-s3";
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class AwsS3Service {
-	private readonly AWS_S3_BUCKET = process.env.AWS_S3_BUCKET;
-	private readonly awsS3 = awsS3;
+  constructor(private readonly configService: ConfigService) {}
 
-	async uploadFile(file) {
-		const { originalname } = file;
+  private readonly aws = AWS;
+  private readonly awsS3 = new AWS.S3({
+    accessKeyId: this.configService.get('AWS_S3_ACCESS_KEY'),
+    secretAccessKey: this.configService.get('AWS_S3_KEY_SECRET'),
+  });
 
-		const params = {
-			Bucket: this.AWS_S3_BUCKET,
-			Key: String(originalname),
-			Body: file.buffer,
-			ContentType: file.mimetype,
-		};
+  async uploadFile(file) {
+    const { originalname } = file;
 
-		try {
-			const s3Response = await this.awsS3.upload(params).promise();
-			console.log(s3Response);
+    // const params = {
+    // 	Bucket: this.AWS_S3_BUCKET,
+    // 	Key: String(originalname),
+    // 	Body: file.buffer,
+    // 	ContentType: file.mimetype,
+    // };
 
-			return s3Response;
-		} catch (e) {
-			throw new InternalServerErrorException();
-		}
-	}
+    try {
+      // const s3Response = await this.awsS3.upload(params).promise();
+      // console.log(s3Response);
+      // return s3Response;
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
 
-	async removeFileFromS3(Key: string) {
-		const s3Response = await this.awsS3
-			.deleteObject({
-				Key,
-				Bucket: this.AWS_S3_BUCKET,
-			})
-			.promise();
-
-		return s3Response;
-	}
+  async removeFileFromS3(Key: string) {
+    // const s3Response = await this.awsS3
+    // 	.deleteObject({
+    // 		Key,
+    // 		Bucket: this.AWS_S3_BUCKET,
+    // 	})
+    // 	.promise();
+    // return s3Response;
+  }
 }

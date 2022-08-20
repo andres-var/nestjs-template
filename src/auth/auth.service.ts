@@ -1,99 +1,99 @@
 import {
-	BadRequestException,
-	Injectable,
-	InternalServerErrorException,
-	UnauthorizedException,
-} from "@nestjs/common";
-import { JwtService }       from "@nestjs/jwt";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository }       from "typeorm";
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-import * as bcrypt from "bcryptjs";
+import * as bcrypt from 'bcryptjs';
 
-import { RegisterDto } from "./dto/register.dto";
-import { LoginDto }    from "./dto/login.dto";
-import { IJwtPayload } from "./interfaces/jwt-payload";
-import { User }        from "src/users/entities/user.entity";
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { IJwtPayload } from './interfaces/jwt-payload';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-	constructor(
+  constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private readonly jwtServices: JwtService,
-	) {}
+  ) {}
 
-	private getJwtToken(paylod: IJwtPayload) {
-		const token = this.jwtServices.sign(paylod);
-		return token;
-	}
+  private getJwtToken(paylod: IJwtPayload) {
+    const token = this.jwtServices.sign(paylod);
+    return token;
+  }
 
-	async register(registerDto: RegisterDto) {
-		try {
-			const { password, ...userData } = registerDto;
+  async register(registerDto: RegisterDto) {
+    try {
+      const { password, ...userData } = registerDto;
 
-			const user = this.userRepository.create({
-				...userData,
-				password: bcrypt.hashSync(password, 10),
-			});
+      const user = this.userRepository.create({
+        ...userData,
+        password: bcrypt.hashSync(password, 10),
+      });
 
-			await this.userRepository.save(user);
-			delete user.password;
+      await this.userRepository.save(user);
+      delete user.password;
 
-			return {
-				...user,
-				token: this.getJwtToken({
-					id: user.id,
-					name: user.name,
-					email: user.email,
-				}),
-			};
-		} catch (error) {
-			this.handleDBErrors(error);
-		}
-	}
+      return {
+        ...user,
+        token: this.getJwtToken({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        }),
+      };
+    } catch (error) {
+      this.handleDBErrors(error);
+    }
+  }
 
-	async login(loginDto: LoginDto) {
-		const { password, email } = loginDto;
+  async login(loginDto: LoginDto) {
+    const { password, email } = loginDto;
 
-		const user = await this.userRepository.findOne({
-			where: { email },
-			select: { email: true, password: true, id: true },
-		});
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: { email: true, password: true, id: true },
+    });
 
-		if (!user)
-			throw new UnauthorizedException("Credentials are not valid (email)");
+    if (!user)
+      throw new UnauthorizedException('Credentials are not valid (email)');
 
-		if (!bcrypt.compareSync(password, user.password))
-			throw new UnauthorizedException("Credentials are not valid (password)");
+    if (!bcrypt.compareSync(password, user.password))
+      throw new UnauthorizedException('Credentials are not valid (password)');
 
-		return {
-			...user,
-			token: this.getJwtToken({
-				id: user.id,
-				name: user.name,
-				email,
-			}),
-		};
-	}
+    return {
+      ...user,
+      token: this.getJwtToken({
+        id: user.id,
+        name: user.name,
+        email,
+      }),
+    };
+  }
 
-	async checkAuthStatus(user: User) {
-		delete user.password;
-		return {
-			...user,
-			token: this.getJwtToken({
-				id: user.id,
-				name: user.name,
-				email: user.email,
-			}),
-		};
-	}
+  async checkAuthStatus(user: User) {
+    delete user.password;
+    return {
+      ...user,
+      token: this.getJwtToken({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      }),
+    };
+  }
 
-	private handleDBErrors(error: any): never {
-		if (error.code === "23505") {
-			throw new BadRequestException(error.detail);
-		}
+  private handleDBErrors(error: any): never {
+    if (error.code === '23505') {
+      throw new BadRequestException(error.detail);
+    }
 
-		throw new InternalServerErrorException("Check server logs");
-	}
+    throw new InternalServerErrorException('Check server logs');
+  }
 }
