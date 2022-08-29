@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User } from 'src/users/entities/user.entity';
 import { JwtStrategy } from './stategies/jwt.stategies';
+import { CommonModule } from 'src/common/common.module';
 
 @Module({
   controllers: [AuthController],
@@ -15,6 +16,7 @@ import { JwtStrategy } from './stategies/jwt.stategies';
 
   imports: [
     ConfigModule,
+    CommonModule,
     TypeOrmModule.forFeature([User]),
 
     PassportModule.register({

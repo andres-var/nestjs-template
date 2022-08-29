@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcryptjs';
+// import { faker } from '@faker-js/faker';
 
 export interface ISeedUser {
   name: string;
@@ -10,15 +11,17 @@ export interface ISeedUser {
   roles: string[];
 }
 
+const PASSWORD = 'Asd123';
+
 export const initialUsers: ISeedUser[] = [
   {
-    email: 'test1@google.com',
-    name: 'Test',
-    lastName: 'One',
-    alias: 'Test One',
+    email: 'development@inprodi.com',
+    name: 'Development',
+    lastName: 'Inprodi',
+    alias: 'Dev',
     isActive: true,
-    password: bcrypt.hashSync('asd123', 10),
-    roles: ['super-admin'],
+    password: bcrypt.hashSync(PASSWORD, 10),
+    roles: ['super-admin', 'admin'],
   },
   {
     email: 'test2@google.com',
@@ -26,7 +29,7 @@ export const initialUsers: ISeedUser[] = [
     lastName: 'Two',
     alias: 'Test Two',
     isActive: true,
-    password: bcrypt.hashSync('asd123', 10),
+    password: bcrypt.hashSync(PASSWORD, 10),
     roles: ['admin'],
   },
   {
@@ -35,7 +38,16 @@ export const initialUsers: ISeedUser[] = [
     lastName: 'three',
     alias: 'Test three',
     isActive: true,
-    password: bcrypt.hashSync('asd123', 10),
+    password: bcrypt.hashSync(PASSWORD, 10),
     roles: ['user'],
   },
+  //   ...Array.from({ length: 1000 }).map((value, index) => ({
+  //     email: faker.internet.exampleEmail().toLowerCase(),
+  //     name: faker.name.firstName(),
+  //     lastName: faker.name.lastName(),
+  //     alias: faker.internet.userName(),
+  //     isActive: true,
+  //     password: bcrypt.hashSync(PASSWORD, 10),
+  //     roles: ['user'],
+  //   })),
 ];

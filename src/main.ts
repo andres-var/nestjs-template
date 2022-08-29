@@ -17,6 +17,11 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
 
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+
       exceptionFactory: (errors) => {
         const errorMessages = errors?.map((error) => ({
           [error.property]: Object.values(error.constraints),
@@ -32,10 +37,19 @@ async function bootstrap() {
     .setDescription(`${process.env.NAME_PROJECT} endpoints`)
     .setVersion('1.0')
     .setExternalDoc('Postman Collection', '/docs-json')
+    .addBearerAuth({
+      // I was also testing it without prefix 'Bearer ' before the JWT
+      description: `[just text field] Please enter token in following format: Bearer <JWT>`,
+      name: 'Authorization',
+      bearerFormat: 'Bearer', // I`ve tested not to use this field, but the result was the same
+      scheme: 'Bearer',
+      type: 'http', // I`ve attempted type: 'apiKey' too
+      in: 'Header',
+    })
     .build();
-  const document = SwaggerModule.createDocument(app, config, {
-    include: [UsersModule, AuthModule],
-  });
+
+  const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(+process.env.PORT);

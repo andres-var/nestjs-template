@@ -8,13 +8,13 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 import { FileInterceptorDisk } from 'src/common/decorators/file-interceptor-disk.decorator';
 import { FilesService } from './files.service';
-import { fileFilter } from './helpers/fileFilter.helper';
-import { fileNamer } from './helpers/fileNamer.helper';
 
+@ApiTags('Files')
 @Controller('files')
 export class FilesController {
   constructor(

@@ -14,6 +14,7 @@ export class AwsS3Service {
   private readonly logger = new Logger();
   private readonly AWS_S3_BUCKET = this.configService.get('AWS_S3_BUCKET');
   private readonly aws = AWS;
+
   private readonly awsS3 = new AWS.S3({
     accessKeyId: this.configService.get('AWS_S3_ACCESS_KEY'),
     secretAccessKey: this.configService.get('AWS_S3_KEY_SECRET'),

@@ -8,12 +8,11 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import * as bcrypt from 'bcryptjs';
-
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { IJwtPayload } from './interfaces/jwt-payload';
 import { User } from 'src/users/entities/user.entity';
+import { BcryptAdapter } from 'src/common/adapters/bcrypt.adapter';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +20,7 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private readonly jwtServices: JwtService,
+    private readonly bcrypt: BcryptAdapter,
   ) {}
 
   private getJwtToken(paylod: IJwtPayload) {
@@ -34,7 +34,7 @@ export class AuthService {
 
       const user = this.userRepository.create({
         ...userData,
-        password: bcrypt.hashSync(password, 10),
+        password: this.bcrypt.hashSync(password, 10),
       });
 
       await this.userRepository.save(user);
@@ -64,7 +64,7 @@ export class AuthService {
     if (!user)
       throw new UnauthorizedException('Credentials are not valid (email)');
 
-    if (!bcrypt.compareSync(password, user.password))
+    if (!this.bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException('Credentials are not valid (password)');
 
     return {

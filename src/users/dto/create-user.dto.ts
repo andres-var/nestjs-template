@@ -6,7 +6,6 @@ import {
   IsString,
   MinLength,
   MaxLength,
-  ValidateNested,
 } from 'class-validator';
 import { Roles } from 'src/auth/interfaces';
 

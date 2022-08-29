@@ -7,12 +7,14 @@ describe('AuthService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [AuthService],
+      imports: [],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {
+    console.log('first');
     expect(service).toBeDefined();
   });
 });
