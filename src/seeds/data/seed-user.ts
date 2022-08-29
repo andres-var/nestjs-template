@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcryptjs';
+import { BcryptAdapter } from 'src/common/adapters/bcrypt.adapter';
 // import { faker } from '@faker-js/faker';
 
 export interface ISeedUser {
@@ -13,6 +13,8 @@ export interface ISeedUser {
 
 const PASSWORD = 'Asd123';
 
+const bcrypt = new BcryptAdapter();
+
 export const initialUsers: ISeedUser[] = [
   {
     email: 'development@inprodi.com',
@@ -20,7 +22,7 @@ export const initialUsers: ISeedUser[] = [
     lastName: 'Inprodi',
     alias: 'Dev',
     isActive: true,
-    password: bcrypt.hashSync(PASSWORD, 10),
+    password: bcrypt.hashSync(PASSWORD),
     roles: ['super-admin', 'admin'],
   },
   {
@@ -29,7 +31,7 @@ export const initialUsers: ISeedUser[] = [
     lastName: 'Two',
     alias: 'Test Two',
     isActive: true,
-    password: bcrypt.hashSync(PASSWORD, 10),
+    password: bcrypt.hashSync(PASSWORD),
     roles: ['admin'],
   },
   {
@@ -38,7 +40,7 @@ export const initialUsers: ISeedUser[] = [
     lastName: 'three',
     alias: 'Test three',
     isActive: true,
-    password: bcrypt.hashSync(PASSWORD, 10),
+    password: bcrypt.hashSync(PASSWORD),
     roles: ['user'],
   },
   //   ...Array.from({ length: 1000 }).map((value, index) => ({
@@ -47,7 +49,7 @@ export const initialUsers: ISeedUser[] = [
   //     lastName: faker.name.lastName(),
   //     alias: faker.internet.userName(),
   //     isActive: true,
-  //     password: bcrypt.hashSync(PASSWORD, 10),
+  //     password: bcrypt.hashSync(PASSWORD),
   //     roles: ['user'],
   //   })),
 ];
