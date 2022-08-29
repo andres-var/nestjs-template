@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  nestjs_template:
+    depends_on:
+      - db
+    build: 
+      context: .
+      dockerfile: .Dockerfile
+    image: pokedex-docker
+    container_name: nestjs_template
+    restart: always # reiniciar el contenedor si se detiene
+    ports:
+      - "${PORT}:${PORT}"
+    # working_dir: /var/www/nestjs_template
+    environment:
+      PORT: ${PORT}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      
+  db:
+    image: postgres:14.3
+    restart: always
+    ports:
+      - "5432:5432"
+    container_name: nestjs_db_postgres

@@ -1,4 +1,4 @@
-# Propuesta
+# Nestjs
 
 1. Clonar proyecto
 2. ```yarn install```
@@ -16,3 +16,14 @@ docker-compose up -d
 http://localhost:8080/api/seed
 ```
 
+# Production Build
+1. Crear el archivo ```.env.prod```
+2. Llenar las variables de entorno de prod
+3. Crear la nueva imagen
+```
+docker-compose -f docker-compose.prod.yaml --env-file .env.prod up --build
+```
+
+## Stack Usado
+- Postgres
+- NestJs

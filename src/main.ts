@@ -3,8 +3,6 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -38,12 +36,11 @@ async function bootstrap() {
     .setVersion('1.0')
     .setExternalDoc('Postman Collection', '/docs-json')
     .addBearerAuth({
-      // I was also testing it without prefix 'Bearer ' before the JWT
-      description: `[just text field] Please enter token in following format: Bearer <JWT>`,
+      description: `Please enter token in following format: Bearer <JWT>`,
       name: 'Authorization',
-      bearerFormat: 'Bearer', // I`ve tested not to use this field, but the result was the same
+      bearerFormat: 'Bearer',
       scheme: 'Bearer',
-      type: 'http', // I`ve attempted type: 'apiKey' too
+      type: 'http',
       in: 'Header',
     })
     .build();
